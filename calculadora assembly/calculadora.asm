@@ -1,9 +1,10 @@
 .data
-    numero: .asciiz "Digite um numero decimal: "
-    n:      .asciiz "\n"
-    binario: .asciiz "Binario: "
-    octal:  .asciiz "Octal: "
-    hexa:   .asciiz "Hexadecimal: "
+    numero:.asciiz "Digite um numero: "
+    n:.asciiz "\n"
+    binario:.asciiz "Binario: "
+    octal:.asciiz "Octal: "
+    hexa:.asciiz "Hexadecimal: "
+    ca2:.asciiz "Complemento a 2: "
 
 .text
 .globl main
@@ -52,6 +53,16 @@ main:
     li $v0, 4
     la $a0, n
     syscall
+    
+    #Complemento
+    li $v0, 4
+    la $a0, ca2
+    syscall
+    jal printca2
+    li $v0, 4
+    la $a0, n
+    syscall
+    
     j fim
     
 divisao:
@@ -94,6 +105,20 @@ printhexa:
     li $v0, 11
     syscall
     b printhexa
+
+printca2:
+    move $t0, $s1
+    sll $t0, $t0, 16
+    li $t1, 16
+
+loopca2:
+    beq $t1, $zero, fimca2
+    srl $a0, $t0, 31 
+    li $v0, 1
+    syscall
+    sll $t0, $t0, 1
+    addi $t1, $t1, -1
+    b loopca2
     
 digito:
     move $a0, $t5
@@ -103,5 +128,6 @@ digito:
 
 fimhexa:
     jr $ra
-    
+fimca2:
+    jr $ra
 fim:
